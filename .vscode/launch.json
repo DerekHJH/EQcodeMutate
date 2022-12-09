@@ -1,0 +1,37 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd":"${fileDirname}",
+            "args":[
+                "--output_dir=./saved_models",
+                "--model_type=roberta",
+                "--config_name=microsoft/codebert-base",
+                "--csv_store_path",
+                "./attack_GA_1500_2000.csv",
+                "--model_name_or_path=microsoft/codebert-base",
+                "--tokenizer_name=roberta-base",
+                "--use_ga",
+                "--base_model=microsoft/codebert-base-mlm",
+                "--train_data_file=../dataset/train_sampled.txt",
+                "--eval_data_file=../dataset/test_sampled_1500_2000.txt",
+                "--test_data_file=../dataset/test_sampled.txt",
+                "--block_size",
+                "512",
+                "--eval_batch_size",
+                "16",
+                "--seed",
+                "123456",
+            ]
+        }
+    ]
+}
