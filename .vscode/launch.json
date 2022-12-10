@@ -12,6 +12,7 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "cwd":"${fileDirname}",
+            "env": {"CUDA_VISIBLE_DEVICES": "1"},
             "args":[
                 "--output_dir=./saved_models",
                 "--model_type=roberta",
