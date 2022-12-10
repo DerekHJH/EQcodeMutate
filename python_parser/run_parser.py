@@ -121,7 +121,7 @@ def is_valid_variable_name(name: str, lang: str) -> bool:
     else:
         return False
 
-path = '../../../python_parser/parser_folder/my-languages.so'
+path = 'python_parser/parser_folder/my-languages.so'
 # path = 'parser_folder/my-languages.so'
 
 c_code = """

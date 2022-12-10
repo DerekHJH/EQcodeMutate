@@ -1,4 +1,5 @@
 import sys
+sys.path.append('./python_parser')
 from python_parser.run_parser import get_identifiers, get_example, get_example_batch
 import torch
 import copy
@@ -7,14 +8,13 @@ from datasets import load_dataset
 from utils import is_valid_variable_name, _tokenize, get_identifier_posistions_from_code, get_substitues, is_valid_substitue
 import json
 
-checkpoint = 'microsoft/codebert-base'
+checkpoint = 'microsoft/codebert-base-mlm'
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # device = 'cpu'
 dataset = load_dataset('AhmedSSoliman/CodeXGLUE-CONCODE')
 codebert = RobertaForMaskedLM.from_pretrained(checkpoint)
 tokenizer = RobertaTokenizer.from_pretrained(checkpoint)
 codebert.to(device)
-
 block_size = tokenizer.model_max_length
 
 def get_EQCodeMutate(original_code: str, json_file: str = "EQCodeMutate.json", num_mutants: int = 10) -> None: 
