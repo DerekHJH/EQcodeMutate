@@ -7,6 +7,11 @@ from transformers import (RobertaForMaskedLM, RobertaTokenizer)
 from datasets import load_dataset
 from utils import is_valid_variable_name, _tokenize, get_identifier_posistions_from_code, get_substitues, is_valid_substitue
 import json
+import random
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 checkpoint = 'microsoft/codebert-base-mlm'
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -101,14 +106,25 @@ def get_EQCodeMutate(original_code: str, json_file: str = "EQCodeMutate.json", n
                 variable_substitue_dict[tgt_word].append(tmp_substitue)
             except:
                 variable_substitue_dict[tgt_word] = [tmp_substitue]
-    mutated_code = {'code': []}
-    for var, substitutes in variable_substitue_dict.items():
-        for substitute in substitutes:
-            mutated_code['code'].append(get_example(original_code, var, substitute, 'java'))
-    json.dump(mutated_code, open(json_file, 'w'))
+    
+    # Get all mutated code
+    mutated_code_list = []
+    while(len(mutated_code_list) < num_mutants):
+        mutated_code = original_code
+        num_vars_to_mutate = random.randint(1, len(variable_substitue_dict))
+        which_vars_to_mutate = random.sample(variable_substitue_dict.keys(), num_vars_to_mutate)
+        for var in which_vars_to_mutate:
+            substitute = random.choice(variable_substitue_dict[var])
+            mutated_code = get_example(mutated_code, var, substitute, 'java')
+        if mutated_code not in mutated_code_list:
+            mutated_code_list.append(mutated_code)
+            logger.info(f"The original code is {original_code}")
+            logger.info(f"The mutated code is {mutated_code}")
+
+    json.dump({'code': mutated_code_list}, open(json_file, 'w'))
 
 def main():
-    print(get_EQCodeMutate(dataset['train'][9]['code']))
+    print(get_EQCodeMutate('int multiply (int factor, int another_factor) { int result = factor * another_factor; return result; }'))
 
 if __name__ == '__main__':
     main()
